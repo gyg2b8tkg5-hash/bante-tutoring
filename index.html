@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BANTE Tutoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a cut-paper poster. Home is one loud orange screen with two subject tiles;
+   each subject page is cream paper with green ink, and the calendar is the working surface. */
+:root{
+  color-scheme: light;
+  --orange:#F0500F;
+  --orange-deep:#D9430A;
+  --green:#1E5A46;
+  --green-deep:#143E30;
+  --yellow:#D8F04C;
+  --cream:#F4ECD6;
+  --cream-deep:#E8DDBF;
+  --ink:#17382D;
+  --display:"Anton","Arial Narrow","Haettenschweiler",Impact,sans-serif;
+  --body:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--orange);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.page :focus-visible{outline-color:var(--orange)}
+[hidden]{display:none !important}
+
+/* ---------- HOME ---------- */
+.home{position:relative;min-height:100%;display:flex;flex-direction:column;background:var(--orange);overflow:hidden}
+.brand{font-family:var(--display);letter-spacing:.04em;font-size:22px;text-decoration:none;text-transform:uppercase}
+.brand small{font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:.14em;margin-left:8px}
+.home .brand{position:absolute;top:20px;left:clamp(16px,4vw,56px);color:var(--yellow);z-index:3}
+
+.hero-top{position:relative}
+.hero-layer{padding:clamp(72px,9vw,120px) clamp(16px,4vw,56px) clamp(28px,4vw,56px)}
+.hero-word{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--yellow);
+  font-size:13.4vw;line-height:.92;letter-spacing:-.005em;white-space:nowrap}
+.band{position:absolute;inset:0;background:var(--cream);clip-path:polygon(46% 0,100% 0,100% 100%);animation:cut .9s cubic-bezier(.2,.8,.2,1) both}
+.band .hero-word{color:var(--green)}
+@keyframes cut{from{clip-path:polygon(100% 0,100% 0,100% 0)}to{clip-path:polygon(46% 0,100% 0,100% 100%)}}
+
+.pick{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:8px 16px 150px}
+.pick p{margin:0;color:var(--cream);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:14px}
+.tiles{display:flex;gap:clamp(14px,3vw,36px);flex-wrap:wrap;justify-content:center}
+.tile{--cut:clamp(30px,3.6vw,44px);position:relative;isolation:isolate;width:clamp(140px,17vw,200px);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  text-decoration:none;border:0;transition:transform .18s ease, filter .18s ease}
+.tile::before,.work-btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--bg);
+  border-radius:var(--cut)}
+.tile b{font-family:var(--display);font-weight:400;font-size:clamp(38px,4.6vw,56px);line-height:1;text-transform:uppercase}
+.tile span{font-weight:700;font-size:16px}
+.tile em{font-style:normal;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:8px;border-bottom:2px solid currentColor}
+.tile.m{--bg:var(--green);color:var(--yellow)}
+.tile.f{--bg:var(--cream);color:var(--green)}
+.tile:hover,.tile:focus-visible{transform:translate(-4px,-4px) rotate(-1.5deg);filter:drop-shadow(8px 8px 0 var(--green-deep))}
+.tile.m:hover,.tile.m:focus-visible{filter:drop-shadow(8px 8px 0 var(--yellow))}
+.work-btn{--cut:999px;--bg:var(--yellow);position:absolute;right:clamp(16px,4vw,56px);bottom:42px;z-index:3;isolation:isolate;display:inline-flex;align-items:center;gap:10px;
+  padding:14px 22px;color:var(--green-deep);text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;transition:transform .18s ease, filter .18s ease}
+.work-btn:hover,.work-btn:focus-visible{transform:translate(-3px,-3px);filter:drop-shadow(6px 6px 0 var(--green))}
+.work-btn i{font-style:normal;font-size:18px;line-height:1}
+
+.wave{position:absolute;left:0;bottom:22px;width:min(58%,760px);height:min(42%,300px);z-index:1}
+.credit{position:absolute;left:clamp(16px,4vw,56px);bottom:52px;z-index:2;color:var(--orange-deep);font-weight:600;font-size:15px}
+.checks{position:absolute;left:0;right:0;bottom:0;height:22px;z-index:2;
+  background:repeating-linear-gradient(90deg,var(--green) 0 30px,transparent 30px 60px)}
+
+/* ---------- SUBJECT PAGE ---------- */
+.page{background:var(--cream);min-height:100%}
+.bar{background:var(--orange);color:var(--yellow);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:14px clamp(16px,4vw,56px)}
+.bar nav{display:flex;gap:8px}
+.bar nav a{font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:7px 12px;color:var(--cream);border:2px solid transparent}
+.bar nav a[aria-current="page"]{background:var(--green);color:var(--yellow)}
+.bar nav a:hover{border-color:var(--cream)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,56px)}
+
+.head{padding:clamp(28px,5vw,64px) 0 clamp(20px,3vw,36px);display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;border-bottom:3px solid var(--green)}
+.head h1{margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--green);font-size:clamp(72px,13vw,170px);line-height:.88}
+.head h1 i{font-style:normal;color:var(--orange)}
+.who{text-align:right}
+.who .lbl,.lbl{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-deep)}
+.who .name{font-family:var(--display);font-size:clamp(28px,3.4vw,40px);line-height:1.05;color:var(--green);text-transform:uppercase}
+
+.info{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:clamp(24px,5vw,72px);padding:clamp(28px,4vw,52px) 0}
+.copy{display:grid;gap:34px;max-width:65ch}
+.copy h2,.cal h2{margin:6px 0 8px;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:30px;line-height:1.05;color:var(--green);text-wrap:balance}
+.copy p{margin:0}
+.copy ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.copy li{padding-left:26px;position:relative}
+.copy li::before{content:"";position:absolute;left:0;top:.5em;width:12px;height:12px;background:var(--orange)}
+.price{align-self:start;position:sticky;top:16px;background:var(--green);color:var(--cream);padding:26px}
+.price .lbl{color:var(--yellow)}
+.price .amt{font-family:var(--display);font-size:84px;line-height:1;color:var(--yellow);margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.price .per{font-weight:600}
+.price ul{list-style:none;margin:18px 0 22px;padding:16px 0 0;border-top:1px solid rgba(244,236,214,.35);display:grid;gap:6px;font-size:15px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;background:var(--orange);color:#fff;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:15px;padding:14px 20px;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--green-deep)}
+.price .btn{width:100%}
+.price .btn:hover{box-shadow:4px 4px 0 var(--yellow)}
+.btn.ghost{background:transparent;color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* calendar */
+.cal{padding:clamp(24px,4vw,44px) 0 72px;border-top:3px solid var(--green)}
+.cal-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.cal-top p{margin:0;max-width:60ch}
+.weeknav{display:flex;align-items:center;gap:8px}
+.weeknav strong{min-width:168px;text-align:center;font-variant-numeric:tabular-nums}
+.sq{width:42px;height:42px;border:2px solid var(--green);background:transparent;color:var(--green);font-size:20px;font-weight:700;line-height:1}
+.sq:hover:not([disabled]){background:var(--green);color:var(--yellow)}
+.sq[disabled]{opacity:.35;cursor:not-allowed}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-bottom:12px;font-size:14px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:16px;height:16px;display:inline-block}
+.sw.free{background:var(--yellow);box-shadow:inset 0 0 0 2px var(--green)}
+.sw.taken,.cell.taken{background:repeating-linear-gradient(135deg,var(--cream-deep) 0 6px,#d3c6a2 6px 8px)}
+.sw.off{background:transparent;box-shadow:inset 0 0 0 1px #cbbf9d}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--green)}
+
+.gridwrap{overflow-x:auto;border:3px solid var(--green);background:#fbf6e6}
+.grid{display:grid;grid-template-columns:58px repeat(7,minmax(84px,1fr));min-width:660px}
+.grid > *{border-right:1px solid #d9cfb0;border-bottom:1px solid #d9cfb0;min-height:42px}
+.dayh{background:var(--green);color:var(--cream);padding:8px 6px;text-align:center;font-size:13px;font-weight:600;line-height:1.25;border-color:var(--green-deep) !important}
+.dayh b{display:block;font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.02em}
+.dayh.today{background:var(--orange);color:#fff}
+.dayh small{display:block;font-size:11px;color:var(--yellow);font-weight:700}
+.dayh.today small{color:#fff}
+.time{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--green)}
+.cell{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 4px;text-align:center;overflow-wrap:anywhere}
+.cell.taken{color:#7d7256}
+.cell.past{color:#b9ad8b;font-weight:500}
+button.cell{border-top:0;border-left:0;width:100%}
+.cell.free{background:var(--yellow);color:var(--green-deep)}
+.cell.free:hover{background:var(--green);color:var(--yellow)}
+.cell.sel{background:var(--orange) !important;color:#fff !important}
+.cell.mine{background:var(--green);color:var(--yellow);text-transform:none;letter-spacing:0}
+.cell.blocked{background:#cfc3a0;color:var(--green-deep)}
+.status{margin:10px 0 0;font-size:14px;color:#5d5a45}
+
+.panel{margin-top:22px;background:var(--green);color:var(--cream);padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px 40px}
+.panel .lbl{color:var(--yellow)}
+.panel .when{font-family:var(--display);font-size:clamp(30px,4vw,44px);line-height:1.05;text-transform:uppercase;color:var(--yellow);margin:6px 0 8px}
+.panel p{margin:0}
+form{display:grid;gap:14px}
+.field{display:grid;gap:5px}
+.field label{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.field input,.field textarea{font:inherit;color:var(--ink);background:var(--cream);border:2px solid transparent;padding:11px 12px;border-radius:0;width:100%}
+.field input:focus,.field textarea:focus{outline:0;border-color:var(--yellow);box-shadow:0 0 0 3px var(--orange)}
+.err{color:var(--yellow);font-weight:700;font-size:14px;min-height:1.2em}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.panel .btn.ghost{color:var(--cream);box-shadow:inset 0 0 0 2px var(--cream)}
+.panel .btn:hover{box-shadow:4px 4px 0 var(--yellow)}
+.done{grid-column:1/-1}
+.log{list-style:none;margin:0;padding:clamp(24px,4vw,44px) 0 72px;display:grid;gap:18px}
+.log li{display:grid;grid-template-columns:190px minmax(0,1fr);gap:8px 32px;background:#fbf6e6;border:3px solid var(--green);padding:clamp(18px,3vw,28px)}
+.log .date{font-family:var(--display);font-size:30px;line-height:1.05;color:var(--orange);text-transform:uppercase;font-variant-numeric:tabular-nums}
+.log h2{margin:4px 0 8px;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:28px;line-height:1.05;color:var(--green)}
+.log p{margin:0;max-width:65ch}
+.intro{margin:0;padding-top:clamp(20px,3vw,32px);max-width:65ch}
+@media (max-width:640px){.log li{grid-template-columns:1fr}}
+.foot{background:var(--green);color:var(--cream);padding:22px clamp(16px,4vw,56px);font-size:14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .info{grid-template-columns:1fr}
+  .price{position:static}
+  .panel{grid-template-columns:1fr}
+  .who{text-align:left}
+}
+@media (max-width:640px){
+  .hero-word{font-size:25vw;white-space:normal}
+  .hero-word span{display:block}
+  .band{clip-path:polygon(30% 0,100% 0,100% 100%)}
+  @keyframes cut{from{clip-path:polygon(100% 0,100% 0,100% 0)}to{clip-path:polygon(30% 0,100% 0,100% 100%)}}
+  .wave{width:80%;height:150px}
+  .pick{padding-bottom:190px}
+  .credit{bottom:104px}
+  .work-btn{bottom:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<main class="home" id="view-home">
+  <a class="brand" href="#home">BANTE<small>Tutoring</small></a>
+  <div class="hero-top">
+    <div class="hero-layer"><h1 class="hero-word"><span>Ready to </span><span>learn?</span></h1></div>
+    <div class="hero-layer band" aria-hidden="true"><div class="hero-word"><span>Ready to </span><span>learn?</span></div></div>
+  </div>
+  <div class="pick">
+    <p>Pick a subject</p>
+    <div class="tiles">
+      <a class="tile m" href="#maths"><b>Maths</b><span>Tutor Benas</span><em>Book a lesson</em></a>
+      <a class="tile f" href="#finance"><b>Finance</b><span>Tutor Aras</span><em>Book a lesson</em></a>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 700 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 40 C120 0 210 40 290 110 C360 170 420 150 500 190 C590 235 650 270 700 300 L0 300 Z" fill="#F4ECD6"/>
+  </svg>
+  <div class="credit">by Team BANTE</div>
+  <a class="work-btn" href="#our-work">Our work so far <i aria-hidden="true">&rarr;</i></a>
+  <div class="checks" aria-hidden="true"></div>
+</main>
+
+<!-- SUBJECT -->
+<div class="page" id="view-subject" hidden>
+  <header class="bar">
+    <a class="brand" href="#home">BANTE<small>Tutoring</small></a>
+    <nav aria-label="Subjects">
+      <a href="#maths" id="nav-maths">Maths</a>
+      <a href="#finance" id="nav-finance">Finance</a>
+    </nav>
+  </header>
+  <div class="wrap">
+    <section class="head">
+      <h1 id="s-title"></h1>
+      <div class="who"><div class="lbl">Your tutor</div><div class="name" id="s-tutor"></div></div>
+    </section>
+
+    <section class="info">
+      <div class="copy">
+        <div><div class="lbl">The goal</div><h2>What BANTE Tutoring is</h2><p id="s-goal"></p></div>
+        <div><div class="lbl">About the tutor</div><h2 id="s-about-h"></h2><p id="s-about"></p></div>
+        <div><div class="lbl">What you get</div><h2>In every lesson</h2><ul id="s-gets"></ul></div>
+        <div><div class="lbl">Topics</div><h2>What we can cover</h2><ul id="s-topics"></ul></div>
+      </div>
+      <aside class="price">
+        <div class="lbl">Price</div>
+        <div class="amt" id="s-price"></div>
+        <div class="per" id="s-per"></div>
+        <ul id="s-terms"></ul>
+        <button class="btn" type="button" id="to-cal">Book a consultation</button>
+      </aside>
+    </section>
+
+    <section class="cal" id="cal">
+      <div class="cal-top">
+        <div>
+          <div class="lbl">Book a consultation</div>
+          <h2 id="cal-h"></h2>
+          <p>Yellow slots are free. Tap one to reserve a 60-minute lesson. Times are Vilnius time.</p>
+        </div>
+        <div class="weeknav">
+          <button class="sq" type="button" id="prev" aria-label="Previous week">&#8249;</button>
+          <strong id="range"></strong>
+          <button class="sq" type="button" id="next" aria-label="Next week">&#8250;</button>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="legend">
+          <span><i class="sw free"></i>Free</span>
+          <span><i class="sw taken"></i>Occupied</span>
+          <span><i class="sw off"></i>Tutor not working</span>
+          <strong id="freecount"></strong>
+        </div>
+        <label class="toggle" for="tutor-mode"><input type="checkbox" id="tutor-mode">Tutor view</label>
+      </div>
+      <div class="gridwrap"><div class="grid" id="grid"></div></div>
+      <p class="status" id="status"></p>
+      <div id="panel"></div>
+    </section>
+  </div>
+  <footer class="foot"><span>BANTE Tutoring · Maths with Benas Levickas · Finance with Aras Miežys</span><a href="#home">Back to subjects</a></footer>
+</div>
+
+<!-- OUR WORK -->
+<div class="page" id="view-work" hidden>
+  <header class="bar">
+    <a class="brand" href="#home">BANTE<small>Tutoring</small></a>
+    <nav aria-label="Subjects">
+      <a href="#maths">Maths</a>
+      <a href="#finance">Finance</a>
+    </nav>
+  </header>
+  <div class="wrap">
+    <section class="head">
+      <h1>Our work<i>.</i></h1>
+      <div class="who"><div class="lbl">Lessons delivered</div><div class="name">2 so far</div></div>
+    </section>
+    <p class="intro">A running record of the lessons BANTE tutors have delivered, newest first.</p>
+    <ol class="log">
+      <li>
+        <div class="date">16 Nov 2026</div>
+        <div>
+          <div class="lbl">Maths · Benas Levickas</div>
+          <h2>Applied mathematics, Topic 6</h2>
+          <p>Benas Levickas delivered one tutoring lesson to a student of the (2026 Fall) Taikomoji matematika socialiniuose moksluose (Applied Mathematics in Social Sciences) course. The lesson covered Topic 6, first-order derivatives of functions.</p>
+        </div>
+      </li>
+      <li>
+        <div class="date">16 Nov 2026</div>
+        <div>
+          <div class="lbl">Finance · Aras Miežys</div>
+          <h2>Principles of Finance, Topics 7A and 7B</h2>
+          <p>Aras Miežys delivered one tutoring lesson to an ISM University student of the (2026 Fall) Principles of Finance BMM course. The lesson covered Topics 7A and 7B.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+  <footer class="foot"><span>BANTE Tutoring · Maths with Benas Levickas · Finance with Aras Miežys</span><a href="#home">Back to subjects</a></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var TZ = "Europe/Vilnius";
+var H0 = 9, H1 = 21;          // first and last+1 start hour shown
+var MAX_WEEKS = 8;
+
+/* ---- Edit the text, prices and working hours here ---- */
+var GOAL = "BANTE Tutoring is two students teaching the two subjects they know best. The goal is simple: you leave each lesson able to solve the problems you could not solve before it. No long courses and no packages. You pick a free hour, bring what you are stuck on, and we work through it together.";
+var SUBJECTS = {
+  maths: {
+    title: "Maths", tutor: "Benas Levickas", first: "Benas",
+    about: "Benas teaches maths the way he would explain it to a classmate: step by step, on paper, until the method makes sense and you can repeat it alone. He prepares each lesson around your own homework, test or exam topic.",
+    gets: ["A 60-minute one-to-one lesson, online or in person in Vilnius", "Worked solutions written out step by step, sent to you after the lesson", "Practice problems matched to your level for the days in between", "A short plan for what to revise before your next test"],
+    topics: ["(2026 Fall) Taikomoji matematika socialiniuose moksluose (Applied Mathematics in Social Sciences), Topics 1–8", "First-order derivatives, higher-order derivatives and functions of several variables (Topics 6–8)", "Midterm overview: past midterm papers worked through with full solutions", "Weekly practice sets and the additional problems, explained until the method is clear", "Preparing for the final exam: a revision plan, formulas and timed practice", "Filling gaps from school maths that the course builds on"],
+    price: "€20", per: "per 60-minute lesson",
+    terms: ["Pay after the lesson", "Free cancellation up to 24 h before", "School and first-year university level"],
+    // working hours by weekday, 0 = Monday: [from, to)
+    hours: {0:[15,20],1:[15,20],2:[15,20],3:[15,20],4:[15,19],5:[10,14]}
+  },
+  finance: {
+    title: "Finance", tutor: "Aras Miežys", first: "Aras",
+    about: "Aras studies business management and marketing at ISM University and tutors the finance topics students most often get stuck on. He works from real numbers and real statements, so the formulas come with a reason to exist.",
+    gets: ["A 60-minute one-to-one lesson, online or in person in Vilnius", "Your own course problems solved together, with the logic explained", "Excel templates for the calculations we cover", "A summary sheet of the formulas and when to use each one"],
+    topics: ["(2026 Fall) Principles of Finance BMM, Topics 1–8, including 7A, 7B and 8A", "Lecture slides explained in plain language, topic by topic", "Midterm overview: the mid-term formula sheet and when to use each formula", "Calculation problems solved step by step, by hand and in Excel", "Preparing for the final exam: a revision plan and practice problems", "Catching up on any topic you missed or did not follow in the lecture"],
+    price: "€20", per: "per 60-minute lesson",
+    terms: ["Pay after the lesson", "Free cancellation up to 24 h before", "First-year university level"],
+    hours: {0:[16,20],1:[16,20],2:[16,20],3:[16,20],5:[10,15],6:[10,15]}
+  }
+};
+
+var $ = function(id){ return document.getElementById(id); };
+function el(tag, cls, text){ var e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+
+/* ---- time helpers (all in Vilnius time, dates handled as UTC midnights) ---- */
+function nowKey(){ return new Date().toLocaleString("sv-SE", {timeZone: TZ}).slice(0, 13); } // "YYYY-MM-DD HH"
+function isoOf(d){ return d.toISOString().slice(0, 10); }
+function mondayOf(iso){ var d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); return d; }
+function addDays(d, n){ var x = new Date(d.getTime()); x.setUTCDate(x.getUTCDate() + n); return x; }
+function fmt(d, opts){ opts.timeZone = "UTC"; return d.toLocaleDateString("en-GB", opts); }
+function slotId(subj, iso, h){ return subj + "_" + iso + "_" + pad(h); }
+
+/* ---- state ---- */
+var state = { subj: null, week: 0, sel: null, tutor: false, done: null };
+var remote = new Map(), local = new Map();
+var db = null, canShare = false, statusText = "Connecting to the shared calendar…";
+var LS = "bante-slots-v1";
+try { var raw = JSON.parse(localStorage.getItem(LS) || "{}"); Object.keys(raw).forEach(function(k){ local.set(k, raw[k]); }); } catch(e){}
+function saveLocal(){ try { var o = {}; local.forEach(function(v, k){ o[k] = v; }); localStorage.setItem(LS, JSON.stringify(o)); } catch(e){} }
+function rec(id){ return remote.get(id) || local.get(id) || null; }
+
+function putRec(id, data){
+  if (canShare) return db.doc("slots/" + id).set(data);
+  local.set(id, data); saveLocal(); return Promise.resolve();
+}
+function delRec(id){
+  if (local.has(id)) { local.delete(id); saveLocal(); }
+  if (canShare && remote.has(id)) return db.doc("slots/" + id).delete();
+  return Promise.resolve();
+}
+
+/* ---- routing ---- */
+function route(){
+  var h = (location.hash || "").replace("#", "");
+  var subj = SUBJECTS[h] ? h : null;
+  var work = h === "our-work";
+  $("view-home").hidden = !!subj || work;
+  $("view-subject").hidden = !subj;
+  $("view-work").hidden = !work;
+  document.body.style.background = (subj || work) ? "var(--cream)" : "var(--orange)";
+  if (work) { state.subj = null; window.scrollTo(0, 0); }
+  if (subj) {
+    if (state.subj !== subj) { state.subj = subj; state.sel = null; state.done = null; state.week = 0; }
+    renderSubject();
+    window.scrollTo(0, 0);
+  }
+}
+
+function fillList(id, items){ var ul = $(id); ul.textContent = ""; items.forEach(function(t){ ul.appendChild(el("li", null, t)); }); }
+
+function renderSubject(){
+  var s = SUBJECTS[state.subj];
+  var t = $("s-title"); t.textContent = s.title; t.appendChild(el("i", null, "."));
+  $("s-tutor").textContent = s.tutor;
+  $("s-goal").textContent = GOAL;
+  $("s-about-h").textContent = s.tutor;
+  $("s-about").textContent = s.about;
+  fillList("s-gets", s.gets); fillList("s-topics", s.topics); fillList("s-terms", s.terms);
+  $("s-price").textContent = s.price; $("s-per").textContent = s.per;
+  $("cal-h").textContent = s.first + "’s calendar";
+  ["maths", "finance"].forEach(function(k){
+    if (k === state.subj) $("nav-" + k).setAttribute("aria-current", "page"); else $("nav-" + k).removeAttribute("aria-current");
+  });
+  renderCal();
+}
+
+/* ---- calendar ---- */
+function renderCal(){
+  if (!state.subj) return;
+  var s = SUBJECTS[state.subj], nk = nowKey(), today = nk.slice(0, 10);
+  var mon = addDays(mondayOf(today), state.week * 7);
+  var days = []; for (var i = 0; i < 7; i++) days.push(addDays(mon, i));
+  $("range").textContent = fmt(days[0], {day: "numeric", month: "short"}) + " – " + fmt(days[6], {day: "numeric", month: "short", year: "numeric"});
+  $("prev").disabled = state.week <= 0; $("next").disabled = state.week >= MAX_WEEKS;
+
+  var g = $("grid"); g.textContent = "";
+  g.appendChild(el("div", "time", ""));
+  var freeByDay = [0,0,0,0,0,0,0], heads = [];
+  days.forEach(function(d){
+    var h = el("div", "dayh" + (isoOf(d) === today ? " today" : ""));
+    h.appendChild(document.createTextNode(fmt(d, {weekday: "short"})));
+    h.appendChild(el("b", null, fmt(d, {day: "numeric", month: "short"})));
+    heads.push(h); g.appendChild(h);
+  });
+  var free = 0;
+  for (let hr = H0; hr < H1; hr++) {
+    g.appendChild(el("div", "time", pad(hr) + ":00"));
+    days.forEach(function(d, di){
+      var iso = isoOf(d), id = slotId(state.subj, iso, hr), r = rec(id);
+      var w = s.hours[di], working = !!w && hr >= w[0] && hr < w[1];
+      var past = (iso + " " + pad(hr)) <= nk;
+      var c;
+      if (past) {
+        c = el("div", "cell past", (working || r) ? "Past" : "");
+      } else if (r) {
+        if (state.tutor) {
+          c = el("button", "cell " + (r.kind === "blocked" ? "blocked" : "mine"), r.kind === "blocked" ? "Blocked" : (r.name || "Booked"));
+          c.type = "button";
+          c.setAttribute("aria-label", (r.kind === "blocked" ? "Blocked, " : "Booking by " + (r.name || "student") + ", ") + label(iso, hr));
+          c.addEventListener("click", function(){ state.done = null; state.sel = {iso: iso, hr: hr, id: id}; renderCal(); showPanel(); });
+        } else {
+          c = el("div", "cell taken", "Occupied");
+        }
+      } else if (working) {
+        free++; freeByDay[di]++;
+        c = el("button", "cell free", state.tutor ? "Free" : pad(hr) + ":00");
+        c.type = "button";
+        c.setAttribute("aria-label", "Free, " + label(iso, hr));
+        c.addEventListener("click", function(){
+          state.done = null;
+          if (state.tutor) { putRec(id, {subject: state.subj, date: iso, hour: hr, kind: "blocked"}).then(renderCal, fail); state.sel = null; renderCal(); return; }
+          state.sel = {iso: iso, hr: hr, id: id}; renderCal(); showPanel();
+        });
+      } else {
+        c = el("div", "cell", "");
+      }
+      if (state.sel && state.sel.id === id) c.classList.add("sel");
+      g.appendChild(c);
+    });
+  }
+  heads.forEach(function(h, i){ h.appendChild(el("small", null, freeByDay[i] ? freeByDay[i] + " free" : "no free slots")); });
+  $("freecount").textContent = free + (free === 1 ? " free slot this week" : " free slots this week");
+  $("status").textContent = state.tutor
+    ? "Tutor view: tap a free slot to block it, tap a blocked slot or a booking to open it. " + statusText
+    : statusText;
+  renderPanel();
+}
+function label(iso, hr){
+  var d = new Date(iso + "T00:00:00Z");
+  return fmt(d, {weekday: "long", day: "numeric", month: "long"}) + ", " + pad(hr) + ":00–" + pad(hr + 1) + ":00";
+}
+function fail(){ statusText = "That change could not be saved. Check your connection and try again."; renderCal(); }
+function showPanel(){ var p = $("panel"); if (p.firstChild) p.scrollIntoView({behavior: "smooth", block: "nearest"}); }
+
+/* ---- booking panel ---- */
+var draft = {name: "", contact: "", note: ""};
+function renderPanel(){
+  var p = $("panel"), s = SUBJECTS[state.subj];
+  // keep the form in place while the student is typing
+  if (p.dataset.key === panelKey() && p.firstChild) return;
+  p.dataset.key = panelKey(); p.textContent = "";
+  if (state.done) {
+    var box = el("div", "panel"), d = el("div", "done");
+    d.appendChild(el("div", "lbl", "Reserved"));
+    d.appendChild(el("div", "when", state.done.label));
+    d.appendChild(el("p", null, "Your " + s.title.toLowerCase() + " lesson with " + s.tutor + " is in the calendar. " + s.first + " will see your name and contact details there and get in touch to confirm the place or the call link."));
+    box.appendChild(d); p.appendChild(box); return;
+  }
+  if (!state.sel) return;
+  var r = rec(state.sel.id), when = label(state.sel.iso, state.sel.hr);
+  var panel = el("div", "panel"), left = el("div");
+  left.appendChild(el("div", "lbl", state.tutor && r ? (r.kind === "blocked" ? "Blocked slot" : "Booking") : "Your lesson"));
+  left.appendChild(el("div", "when", when));
+  panel.appendChild(left);
+
+  if (state.tutor && r) {
+    var info = el("div");
+    if (r.kind === "blocked") info.appendChild(el("p", null, "You blocked this hour. Students see it as occupied."));
+    else {
+      info.appendChild(el("p", null, "Student: " + (r.name || "")));
+      info.appendChild(el("p", null, "Contact: " + (r.contact || "")));
+      if (r.note) info.appendChild(el("p", null, "Wants to cover: " + r.note));
+    }
+    var acts = el("div", "actions"); acts.style.marginTop = "16px";
+    var rm = el("button", "btn", r.kind === "blocked" ? "Unblock this hour" : "Cancel this booking"); rm.type = "button";
+    rm.addEventListener("click", function(){ var id = state.sel.id; state.sel = null; delRec(id).then(renderCal, fail); renderCal(); });
+    acts.appendChild(rm); info.appendChild(acts); panel.appendChild(info); p.appendChild(panel); return;
+  }
+  if (r) { state.sel = null; p.dataset.key = ""; return; } // someone else took it meanwhile
+
+  left.appendChild(el("p", null, s.title + " with " + s.tutor + " · 60 minutes · " + s.price));
+  var f = el("form"); f.noValidate = true;
+  f.appendChild(field("bk-name", "Your name", "input", "name", "name"));
+  f.appendChild(field("bk-contact", "Email or phone", "input", "contact", "email"));
+  f.appendChild(field("bk-note", "What do you want to cover? (optional)", "textarea", "note"));
+  var err = el("div", "err"); err.id = "bk-err"; err.setAttribute("role", "alert"); f.appendChild(err);
+  var a = el("div", "actions");
+  var ok = el("button", "btn", "Confirm booking"); ok.type = "submit";
+  var no = el("button", "btn ghost", "Pick another time"); no.type = "button";
+  no.addEventListener("click", function(){ state.sel = null; renderCal(); });
+  a.appendChild(ok); a.appendChild(no); f.appendChild(a);
+  f.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var name = draft.name.trim(), contact = draft.contact.trim();
+    if (!name) { err.textContent = "Add your name so the tutor knows who is coming."; $("bk-name").focus(); return; }
+    if (contact.length < 5) { err.textContent = "Add an email or phone number so the tutor can confirm the lesson."; $("bk-contact").focus(); return; }
+    var sel = state.sel;
+    if (rec(sel.id)) { err.textContent = "This hour was just taken. Pick another free slot."; return; }
+    ok.disabled = true; ok.textContent = "Saving…";
+    putRec(sel.id, {subject: state.subj, date: sel.iso, hour: sel.hr, kind: "booking", name: name.slice(0, 80), contact: contact.slice(0, 120), note: draft.note.trim().slice(0, 500), createdAt: new Date().toISOString()})
+      .then(function(){ state.done = {label: label(sel.iso, sel.hr)}; state.sel = null; draft.note = ""; renderCal(); showPanel(); },
+            function(){ ok.disabled = false; ok.textContent = "Confirm booking"; err.textContent = "The booking could not be saved. Check your connection and try again."; });
+  });
+  panel.appendChild(f); p.appendChild(panel);
+}
+function panelKey(){
+  if (state.done) return "done:" + state.done.label;
+  if (!state.sel) return "";
+  var r = rec(state.sel.id);
+  return state.subj + ":" + state.sel.id + ":" + (state.tutor ? "t" : "s") + ":" + (r ? r.kind : "free");
+}
+function field(id, labelText, tag, key, auto){
+  var w = el("div", "field"), l = el("label", null, labelText); l.htmlFor = id;
+  var i = el(tag); i.id = id; i.value = draft[key];
+  if (tag === "input") i.type = "text"; else i.rows = 2;
+  if (auto) i.autocomplete = auto;
+  i.addEventListener("input", function(){ draft[key] = i.value; });
+  w.appendChild(l); w.appendChild(i); return w;
+}
+
+/* ---- controls ---- */
+$("prev").addEventListener("click", function(){ if (state.week > 0) { state.week--; state.sel = null; renderCal(); } });
+$("next").addEventListener("click", function(){ if (state.week < MAX_WEEKS) { state.week++; state.sel = null; renderCal(); } });
+$("tutor-mode").addEventListener("change", function(e){ state.tutor = e.target.checked; state.sel = null; state.done = null; renderCal(); });
+$("to-cal").addEventListener("click", function(){ $("cal").scrollIntoView({behavior: "smooth", block: "start"}); });
+window.addEventListener("hashchange", route);
+route();
+setInterval(function(){ if (state.subj && !state.sel) renderCal(); }, 5 * 60 * 1000); // roll past hours over
+
+/* ---- shared calendar (lights up when the page can reach it) ---- */
+var LOCAL_NOTE = "Preview mode: bookings made here are saved on this device only.";
+(async function(){
+  var c = window.claude;
+  if (!c || !c.use) { statusText = LOCAL_NOTE; renderCal(); return; }
+  var user = null;
+  try { db = await c.use("db"); user = await c.use("user"); } catch(e){ db = null; }
+  if (!db) { statusText = LOCAL_NOTE; renderCal(); return; }
+  var w = null;
+  try { if (user && user.can) w = await user.can("data.write"); } catch(e){}
+  canShare = w !== false;
+  var slow = setTimeout(function(){ statusText = "The shared calendar can’t be reached yet. Occupied times may be out of date."; renderCal(); }, 10000);
+  db.collection("slots").onSnapshot(function(snap){
+    var m = new Map();
+    snap.docs.forEach(function(d){ var v = d.data(); if (v) m.set(d.id, v); });
+    remote = m;
+    if (!snap.metadata || !snap.metadata.fromCache) clearTimeout(slow);
+    statusText = canShare ? "Live calendar: bookings appear for everyone straight away." : "You can see occupied times. " + LOCAL_NOTE;
+    renderCal();
+  }, function(){
+    clearTimeout(slow); canShare = false;
+    statusText = "The shared calendar is not available right now. " + LOCAL_NOTE; renderCal();
+  });
+})();
+})();
+</script>
+</body>
+</html>
